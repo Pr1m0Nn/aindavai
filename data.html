@@ -4,13 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Quadro de Avisos</title>
+    <link href="https://fonts.googleapis.com/css2?family=Gotham:wght@400;700&display=swap" rel="stylesheet">
     <style>
         body {
-            font-family: 'Comic Sans MS', cursive, sans-serif;
-            background-image: url('fundo.png');
-            background-size: cover;
-            background-position: center;
-            background-attachment: fixed;
+            font-family: 'Gotham', sans-serif;
+            background-color: #BE8751;
             margin: 0;
             padding: 20px;
             overflow: hidden;
@@ -22,16 +20,14 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            font-size: 2em;
-            color: white;
+            font-size: 2.5em;
+            font-weight: 700;
+            color: black;
             text-align: center;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
             z-index: 10;
-            background-color: rgba(0, 0, 0, 0.6);
-            padding: 20px 40px;
-            border-radius: 15px;
-            max-width: 80%;
-            box-shadow: 0 0 20px rgba(0,0,0,0.5);
+            pointer-events: none;
+            width: 80%;
+            max-width: 600px;
         }
         
         .post-it {
@@ -39,7 +35,7 @@
             width: 200px;
             height: 200px;
             padding: 15px;
-            box-shadow: 3px 3px 8px rgba(0, 0, 0, 0.3);
+            box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.2);
             cursor: move;
             user-select: none;
             overflow: hidden;
@@ -52,7 +48,7 @@
         .post-it:hover {
             transform: scale(1.1) rotate(0deg);
             z-index: 100;
-            box-shadow: 5px 5px 15px rgba(0,0,0,0.4);
+            box-shadow: 8px 8px 20px rgba(0,0,0,0.3);
         }
         
         .post-it img {
@@ -65,13 +61,14 @@
         
         .post-it p {
             margin: 0;
-            font-size: 0.9em;
+            font-size: 1em;
             text-align: center;
             word-wrap: break-word;
             flex-grow: 1;
             display: flex;
             align-items: center;
             justify-content: center;
+            font-family: 'Gotham', sans-serif;
         }
         
         .lyrics {
@@ -146,12 +143,48 @@
         ];
         
         function createPostIt() {
+            const postIts = [];
             const centerX = window.innerWidth / 2;
             const centerY = window.innerHeight / 2;
-            const minRadius = 200;
-            const maxRadius = Math.min(window.innerWidth, window.innerHeight) * 0.4;
+            const minRadius = 250;
+            const maxRadius = Math.min(window.innerWidth, window.innerHeight) * 0.45;
+            const spacing = 220; // Distância mínima entre post-its
             
             for (let i = 0; i < lyrics.length; i++) {
+                let attempts = 0;
+                let validPosition = false;
+                let left, top;
+                
+                // Tenta encontrar uma posição que não sobreponha outros post-its
+                while (!validPosition && attempts < 100) {
+                    attempts++;
+                    
+                    // Posição em círculo ao redor do texto central
+                    const angle = Math.random() * Math.PI * 2;
+                    const radius = minRadius + Math.random() * (maxRadius - minRadius);
+                    left = centerX + Math.cos(angle) * radius - 100; // 100 = metade da largura
+                    top = centerY + Math.sin(angle) * radius - 100; // 100 = metade da altura
+                    
+                    // Verifica colisão com outros post-its
+                    validPosition = true;
+                    for (const other of postIts) {
+                        const dx = left - other.left;
+                        const dy = top - other.top;
+                        const distance = Math.sqrt(dx * dx + dy * dy);
+                        
+                        if (distance < spacing) {
+                            validPosition = false;
+                            break;
+                        }
+                    }
+                }
+                
+                if (!validPosition) {
+                    // Se não encontrar posição ideal após muitas tentativas, coloca aleatoriamente
+                    left = Math.random() * (window.innerWidth - 200);
+                    top = Math.random() * (window.innerHeight - 200);
+                }
+                
                 const postIt = document.createElement('div');
                 postIt.className = 'post-it';
                 
@@ -164,15 +197,10 @@
                 postIt.style.color = brightness > 180 ? '#333' : '#fff';
                 
                 // Rotação aleatória
-                const rotation = -5 + Math.random() * 10;
+                const rotation = -10 + Math.random() * 20;
                 postIt.style.transform = `rotate(${rotation}deg)`;
                 
-                // Posição em círculo ao redor do texto central
-                const angle = Math.random() * Math.PI * 2;
-                const radius = minRadius + Math.random() * (maxRadius - minRadius);
-                const left = centerX + Math.cos(angle) * radius - 100; // 100 = metade da largura
-                const top = centerY + Math.sin(angle) * radius - 100; // 100 = metade da altura
-                
+                // Posiciona o post-it
                 postIt.style.left = `${left}px`;
                 postIt.style.top = `${top}px`;
                 
@@ -193,6 +221,7 @@
                 makeDraggable(postIt);
                 
                 document.body.appendChild(postIt);
+                postIts.push({ left, top });
             }
         }
         
@@ -207,6 +236,7 @@
         function makeDraggable(element) {
             let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
             let isDragging = false;
+            let startX, startY;
             
             element.onmousedown = dragMouseDown;
             
@@ -220,16 +250,23 @@
                 // get the mouse cursor position at startup:
                 pos3 = e.clientX;
                 pos4 = e.clientY;
+                startX = e.clientX;
+                startY = e.clientY;
                 document.onmouseup = closeDragElement;
-                // call a function whenever the cursor moves:
                 document.onmousemove = elementDrag;
                 isDragging = false;
+                element.style.zIndex = 100; // Traz para frente ao arrastar
             }
             
             function elementDrag(e) {
                 e = e || window.event;
                 e.preventDefault();
-                isDragging = true;
+                
+                // Verifica se o movimento é suficiente para considerar como arrasto
+                if (!isDragging && (Math.abs(e.clientX - startX) > 5 || Math.abs(e.clientY - startY) > 5)) {
+                    isDragging = true;
+                }
+                
                 // calculate the new cursor position:
                 pos1 = pos3 - e.clientX;
                 pos2 = pos4 - e.clientY;
@@ -252,6 +289,10 @@
                         element.style.pointerEvents = 'auto';
                     }, 100);
                 }
+                
+                setTimeout(() => {
+                    element.style.zIndex = ''; // Restaura z-index após arrastar
+                }, 300);
             }
         }
         
@@ -272,22 +313,10 @@
         
         window.onresize = function() {
             // Reorganiza os post-its ao redimensionar a janela
-            const postIts = document.querySelectorAll('.post-it');
-            if (postIts.length > 0) {
-                const centerX = window.innerWidth / 2;
-                const centerY = window.innerHeight / 2;
-                const minRadius = 200;
-                const maxRadius = Math.min(window.innerWidth, window.innerHeight) * 0.4;
-                
-                postIts.forEach(postIt => {
-                    const angle = Math.random() * Math.PI * 2;
-                    const radius = minRadius + Math.random() * (maxRadius - minRadius);
-                    const left = centerX + Math.cos(angle) * radius - 100;
-                    const top = centerY + Math.sin(angle) * radius - 100;
-                    
-                    postIt.style.left = `${left}px`;
-                    postIt.style.top = `${top}px`;
-                });
+            const postItElements = document.querySelectorAll('.post-it');
+            if (postItElements.length > 0) {
+                document.querySelectorAll('.post-it').forEach(el => el.remove());
+                createPostIt();
             }
         };
         
