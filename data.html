@@ -7,11 +7,12 @@
     <style>
         body {
             font-family: 'Comic Sans MS', cursive, sans-serif;
-            background-image: url('https://i.imgur.com/corkboard.jpg');
+            background-image: url('https://img.freepik.com/free-photo/cork-board-texture_1194-6367.jpg');
             background-size: cover;
             margin: 0;
             padding: 20px;
             overflow: hidden;
+            min-height: 100vh;
         }
         
         .post-it {
@@ -23,8 +24,14 @@
             box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
             cursor: move;
             user-select: none;
-            transform: rotate(calc(-5deg + 10deg * random()));
+            transform: rotate(-2deg);
             overflow: hidden;
+            transition: transform 0.2s;
+        }
+        
+        .post-it:hover {
+            transform: rotate(0deg) scale(1.05);
+            z-index: 100;
         }
         
         .post-it img {
@@ -44,10 +51,66 @@
             font-style: italic;
             color: #555;
         }
+        
+        /* Estilo para o player de música */
+        .music-player {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: rgba(255, 255, 255, 0.8);
+            padding: 10px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.2);
+            z-index: 1000;
+        }
+        
+        .music-player button {
+            background-color: #5a2d82;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 0 5px;
+        }
     </style>
 </head>
 <body>
+    <!-- Áudio para música de fundo -->
+    <audio id="bgMusic" loop>
+        <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
+        Seu navegador não suporta o elemento de áudio.
+    </audio>
+    
+    <!-- Controle de música -->
+    <div class="music-player">
+        <button id="playBtn">▶ Play</button>
+        <button id="pauseBtn">⏸ Pause</button>
+        <span>Música de fundo</span>
+    </div>
+
     <script>
+        // Controles de música
+        const bgMusic = document.getElementById('bgMusic');
+        const playBtn = document.getElementById('playBtn');
+        const pauseBtn = document.getElementById('pauseBtn');
+        
+        // Configura volume inicial baixo
+        bgMusic.volume = 0.3;
+        
+        playBtn.addEventListener('click', () => {
+            bgMusic.play();
+        });
+        
+        pauseBtn.addEventListener('click', () => {
+            bgMusic.pause();
+        });
+        
+        // Tenta reproduzir automaticamente (pode não funcionar em alguns navegadores)
+        document.addEventListener('click', function() {
+            bgMusic.play().catch(e => console.log("Reprodução automática bloqueada"));
+        }, { once: true });
+
         const lyrics = [
             "Imagine all the people living life in peace",
             "Don't stop believin', hold on to that feelin'",
