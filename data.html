@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quadro de Avisos</title>
+    <style>
+        body {
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            background-image: url('https://i.imgur.com/corkboard.jpg');
+            background-size: cover;
+            margin: 0;
+            padding: 20px;
+            overflow: hidden;
+        }
+        
+        .post-it {
+            position: absolute;
+            width: 150px;
+            height: 150px;
+            padding: 10px;
+            background-color: #fffb8f;
+            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+            cursor: move;
+            user-select: none;
+            transform: rotate(calc(-5deg + 10deg * random()));
+            overflow: hidden;
+        }
+        
+        .post-it img {
+            max-width: 100%;
+            max-height: 80px;
+            display: block;
+            margin: 5px auto;
+        }
+        
+        .post-it p {
+            margin: 5px 0;
+            font-size: 0.9em;
+            text-align: center;
+        }
+        
+        .lyrics {
+            font-style: italic;
+            color: #555;
+        }
+    </style>
+</head>
+<body>
+    <script>
+        const lyrics = [
+            "Imagine all the people living life in peace",
+            "Don't stop believin', hold on to that feelin'",
+            "I see a little silhouetto of a man",
+            "Is this the real life? Is this just fantasy?",
+            "Here comes the sun, doo-doo-doo-doo",
+            "We will, we will rock you",
+            "Yesterday, all my troubles seemed so far away",
+            "I wanna hold your hand",
+            "Let it be, let it be",
+            "Hey Jude, don't make it bad",
+            "Bohemian Rhapsody lyrics here",
+            "Another one bites the dust",
+            "We are the champions, my friends",
+            "Money, get away",
+            "All you need is love",
+            "Lucy in the sky with diamonds",
+            "Hello, hello, I don't know why you say goodbye",
+            "Strawberry fields forever",
+            "Let me take you down 'cause I'm going to",
+            "Penny Lane is in my ears and in my eyes"
+        ];
+        
+        const images = [
+            "https://media.giphy.com/media/3o7aTskHEUdgCQAXde/giphy.gif",
+            "https://media.giphy.com/media/3o7btPCcdNniyf0ArS/giphy.gif",
+            "https://media.giphy.com/media/3o7abAHdYvZdBNnGZq/giphy.gif",
+            "https://media.giphy.com/media/3o7TKsQ8UQk5JJxPyQ/giphy.gif",
+            "https://media.giphy.com/media/3o7TKwxYkeW0ZgTn1e/giphy.gif"
+        ];
+        
+        function createPostIt() {
+            for (let i = 0; i < 20; i++) {
+                const postIt = document.createElement('div');
+                postIt.className = 'post-it';
+                
+                // Posição aleatória
+                const left = Math.random() * (window.innerWidth - 170);
+                const top = Math.random() * (window.innerHeight - 170);
+                postIt.style.left = left + 'px';
+                postIt.style.top = top + 'px';
+                
+                // Rotação aleatória
+                const rotation = -5 + Math.random() * 10;
+                postIt.style.transform = `rotate(${rotation}deg)`;
+                
+                // Conteúdo - 50% chance de ter imagem
+                if (Math.random() > 0.5) {
+                    const img = document.createElement('img');
+                    img.src = images[Math.floor(Math.random() * images.length)];
+                    postIt.appendChild(img);
+                }
+                
+                const lyric = document.createElement('p');
+                lyric.className = 'lyrics';
+                lyric.textContent = lyrics[i];
+                postIt.appendChild(lyric);
+                
+                // Tornar arrastável
+                makeDraggable(postIt);
+                
+                document.body.appendChild(postIt);
+            }
+        }
+        
+        function makeDraggable(element) {
+            let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
+            
+            element.onmousedown = dragMouseDown;
+            
+            function dragMouseDown(e) {
+                e = e || window.event;
+                e.preventDefault();
+                // get the mouse cursor position at startup:
+                pos3 = e.clientX;
+                pos4 = e.clientY;
+                document.onmouseup = closeDragElement;
+                // call a function whenever the cursor moves:
+                document.onmousemove = elementDrag;
+            }
+            
+            function elementDrag(e) {
+                e = e || window.event;
+                e.preventDefault();
+                // calculate the new cursor position:
+                pos1 = pos3 - e.clientX;
+                pos2 = pos4 - e.clientY;
+                pos3 = e.clientX;
+                pos4 = e.clientY;
+                // set the element's new position:
+                element.style.top = (element.offsetTop - pos2) + "px";
+                element.style.left = (element.offsetLeft - pos1) + "px";
+            }
+            
+            function closeDragElement() {
+                // stop moving when mouse button is released:
+                document.onmouseup = null;
+                document.onmousemove = null;
+            }
+        }
+        
+        // Verifica se o usuário digitou a resposta correta na URL
+        function checkURL() {
+            const path = window.location.pathname.split('/').pop();
+            
+            if (path === 'Tobi' || path === 'tobi') {
+                // Resposta correta - próxima fase
+                window.location.href = 'Tobi';
+            }
+        }
+        
+        window.onload = function() {
+            createPostIt();
+            checkURL();
+        };
+        
+        window.onpopstate = checkURL;
+    </script>
+</body>
+</html>

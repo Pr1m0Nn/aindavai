@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>1 mês!!!!!</title>
+    <style>
+        body {
+            font-family: 'Helvetica', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+            position: relative;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><path d="M50 20c-6 0-10 4-10 10s4 10 10 10 10-4 10-10-4-10-10-10zm0 15c-2.8 0-5-2.2-5-5s2.2-5 5-5 5 2.2 5 5-2.2 5-5 5z" fill="%23a37eb8"/><circle cx="50" cy="30" r="5" fill="%23dac9df"/><path d="M45 50c0-2.8 2.2-5 5-5s5 2.2 5 5-2.2 5-5 5-5-2.2-5-5z" fill="%23a37eb8"/><path d="M50 35l5 15-5 15-5-15z" fill="%238a5a9b"/><path d="M35 50l15-5 15 5-15 5z" fill="%238a5a9b"/></svg>');
+            background-size: 80px 80px;
+            background-position: 0 0, 40px 40px;
+            display: flex;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        /* Faixa central branca */
+        .main-stripe {
+            width: 90%;
+            max-width: 900px;
+            background: rgba(255, 255, 255, 0.95);
+            position: relative;
+            padding: 20px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Container para dica com GIF */
+        .hint-container {
+            display: none; /* Começa escondido */
+            flex-direction: row;
+            align-items: center;
+            justify-content: space-between;
+            margin: 30px auto;
+            max-width: 700px;
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .hint-text {
+            flex: 1;
+            padding-right: 20px;
+            text-align: left;
+        }
+
+        .hint-gif {
+            width: 120px;
+            height: 120px;
+            flex-shrink: 0;
+        }
+
+        /* Estilos dos outros elementos */
+        .cat-image {
+            width: 300px;
+            margin-top: 40px;
+        }
+
+        .welcome-container {
+            margin: 20px auto;
+            max-width: 600px;
+            padding: 0 20px;
+        }
+        
+        h1 {
+            color: #5a2d82;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        
+        .message-box {
+            background-color: rgba(255, 255, 255, 0.85);
+            border-radius: 15px;
+            padding: 20px;
+            margin: 20px auto;
+            max-width: 500px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            font-size: 1.1em;
+            line-height: 1.5;
+        }
+
+        .password-box {
+            margin: 30px auto;
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            max-width: 400px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        input {
+            padding: 10px;
+            font-size: 1em;
+            border: 2px solid #5a2d82;
+            border-radius: 5px;
+            width: 200px;
+            margin-top: 10px;
+        }
+        
+        button {
+            padding: 10px 20px;
+            background-color: #5a2d82;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+            margin-left: 10px;
+        }
+        
+        button:hover {
+            background-color: #7a4da2;
+        }
+        
+        .wallet-container {
+            margin: 30px auto;
+            position: relative;
+            max-width: 300px;
+            display: none;
+        }
+        
+        .wallet-img {
+            width: 100%;
+            cursor: pointer;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s ease;
+        }
+        
+        /* Efeito de hover na carteira */
+        .wallet-img {
+            content: url('https://cdn.discordapp.com/attachments/1269790229296971889/1404913122208125170/1238_Sem_Titulo_20250812164152.png');
+        }
+        
+        .wallet-img:hover {
+            content: url('https://cdn.discordapp.com/attachments/1269790229296971889/1404913122208125170/1238_Sem_Titulo_20250812164152.png'); /* Substitua pelo link da imagem 2 */
+            transform: scale(1.05);
+        }
+        
+        .hidden-img-container {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 100;
+        }
+        
+        .hidden-img {
+            max-width: 80vw;
+            max-height: 80vh;
+            border: 3px solid #5a2d82;
+            border-radius: 10px;
+            animation: zoomIn 0.5s forwards;
+        }
+        
+        @keyframes zoomIn {
+            from { transform: scale(0.5); }
+            to { transform: scale(1); }
+        }
+        
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: 99;
+        }
+        
+        .error-message {
+            color: red;
+            margin-top: 10px;
+            display: none;
+        }
+        
+        .invisible-layer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            cursor: pointer;
+            z-index: 101;
+        }
+    </style>
+</head>
+<body>
+    <div class="main-stripe">
+        <!-- Áudio de fundo -->
+        <audio loop id="backgroundMusic">
+            <source src="https://dl.dropboxusercontent.com/scl/fi/oaw3xmhw621ac74hnrj8d/Ukiki-Jammin-Yoshi-s-New-Island-OST.mp3" type="audio/mpeg">
+        </audio>
+        
+        <!-- Conteúdo principal -->
+        <img src="https://media.tenor.com/eRGU5l2v-_wAAAAj/cat-meme.gif" class="cat-image" alt="Gato acenando">
+        
+        <div class="welcome-container">
+            <h1>Bem-vindo bebê!!!</h1>
+            
+            <div class="message-box small-message">
+                <p>PARABÉNS MEU AMOR!!! Um mêszinho ein... slk.. Um de muitos né!! KKKKKKKKKKKKKKKKKKKKKKK</p>
+                <p>Tava aqui querendo fazer algo legalzinho pra você, sabe? comemorar com coisa bonitinha e tals... Mas ti me conhece, eu me complico.</p>
+                <p>E não feliz de me complicar, resolvi complicar a >SUA< vida!!1!!!!1!! XD</p>
+                <p>Aqui ta um presentinho que eu fiz, mas você precisa por uma senha.. hmmmmm... qual será???? .... Talvez você possa tentar,, ahh.. gato? Já que você é um rsrs</p>
+            </div>
+        </div>
+        
+        <div class="password-box">
+            <input type="password" id="passwordInput" placeholder="Digite a senha...">
+            <button onclick="checkPassword()">Entrar</button>
+            <p class="error-message" id="errorMessage">Senha incorreta! Tente novamente.</p>
+        </div>
+        
+        <!-- Container de dica com GIF -->
+        <div class="hint-container" id="hintSection">
+            <div class="hint-text">
+                <p>Vixi.... gato nao foi? putz.</p>
+                <p>Ai já não sei.. Será que tem algo a mais pra fazer? Tipo, não sei.. dá uma olhadinha na minha carteira, com toda certeza deve ter alguma pista lá!!! Se achar algo, tenta colocar na url... Tipo pra pular todo o processo e papa, faz assim: "euteamo.github/senhafoda" okay?</p>
+            </div>
+            <img src="https://media.tenor.com/fARxykRmn70AAAAj/confuso-confuse.gif" class="hint-gif" alt="GIF de confusão">
+        </div>
+        
+        <!-- Carteira -->
+        <div class="wallet-container" id="walletSection">
+            <img src="https://cdn.discordapp.com/attachments/1269790229296971889/1404913122208125170/1238_Sem_Titulo_20250812164152.png" class="wallet-img" alt="Carteira" id="walletImg">
+        </div>
+    </div>
+    
+    <!-- Overlay e imagem escondida -->
+    <div class="overlay" id="overlay"></div>
+    <div class="hidden-img-container" id="hiddenImgContainer">
+        <img src="https://i.imgur.com/placeholder.png" class="hidden-img" id="hiddenImg">
+        <div class="invisible-layer" id="invisibleLayer"></div>
+    </div>
+    
+    <script>
+        // Espera a página carregar completamente
+        document.addEventListener('DOMContentLoaded', function() {
+            let attempts = 0;
+            
+            // Configuração da música
+            const backgroundMusic = document.getElementById('backgroundMusic');
+            
+            // Toca a música após primeira interação
+            function playMusic() {
+                backgroundMusic.play().catch(e => console.log("Autoplay bloqueado"));
+                document.removeEventListener('click', playMusic);
+            }
+            
+            document.addEventListener('click', playMusic);
+            
+            // Configuração da senha
+            function checkPassword() {
+                const password = document.getElementById('passwordInput').value;
+                const errorMessage = document.getElementById('errorMessage');
+                const hintSection = document.getElementById('hintSection');
+                const walletSection = document.getElementById('walletSection');
+                
+                if (password.toLowerCase() === 'voce') {
+                    window.location.href = 'vizinhos';
+                } else {
+                    attempts++;
+                    errorMessage.style.display = 'block';
+                    
+                    if (attempts >= 2) {
+                        hintSection.style.display = 'flex';
+                        walletSection.style.display = 'block';
+                    }
+                }
+            }
+            
+            // Configura botão e campo de senha
+            document.querySelector('button').addEventListener('click', checkPassword);
+            
+            // Permite enviar com Enter
+            document.getElementById('passwordInput').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    checkPassword();
+                }
+            });
+            
+            // Configuração da carteira e imagem escondida
+            const walletImg = document.getElementById('walletImg');
+            const hiddenImgContainer = document.getElementById('hiddenImgContainer');
+            const overlay = document.getElementById('overlay');
+            const invisibleLayer = document.getElementById('invisibleLayer');
+            
+            // Pré-carrega a imagem de hover
+            const hoverImage = new Image();
+            hoverImage.src = 'https://cdn.discordapp.com/attachments/1269790229296971889/1404913123269542108/1238_Sem_Titulo_20250812164200.png'; // Substitua pelo link da imagem 2
+            
+            walletImg.addEventListener('mouseenter', function() {
+                this.src = hoverImage.src;
+            });
+            
+            walletImg.addEventListener('mouseleave', function() {
+                this.src = 'https://cdn.discordapp.com/attachments/1269790229296971889/1404913122208125170/1238_Sem_Titulo_20250812164152.png';
+            });
+            
+            walletImg.addEventListener('click', function() {
+                overlay.style.display = 'block';
+                hiddenImgContainer.style.display = 'block';
+                
+                // Ajusta a layer invisível para cobrir exatamente a imagem
+                const hiddenImg = document.getElementById('hiddenImg');
+                invisibleLayer.style.width = hiddenImg.offsetWidth + 'px';
+                invisibleLayer.style.height = hiddenImg.offsetHeight + 'px';
+            });
+            
+            overlay.addEventListener('click', function() {
+                overlay.style.display = 'none';
+                hiddenImgContainer.style.display = 'none';
+            });
+        });
+    </script>
+</body>
+</html>
