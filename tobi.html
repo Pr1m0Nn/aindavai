@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Final</title>
+    <style>
+        body {
+            font-family: 'Courier New', monospace;
+            background-color: black;
+            color: white;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+            text-align: center;
+        }
+        
+        .typing-text {
+            font-size: 1.5em;
+            border-right: 0.15em solid white;
+            white-space: nowrap;
+            overflow: hidden;
+            margin: 0 auto;
+            letter-spacing: 0.15em;
+            animation: blink-caret 0.75s step-end infinite;
+        }
+        
+        @keyframes blink-caret {
+            from, to { border-color: transparent }
+            50% { border-color: white; }
+        }
+        
+        .eye {
+            width: 200px;
+            height: 200px;
+            background-image: url('https://media.giphy.com/media/3o7TKA5hqkOqGHQNHi/giphy.gif');
+            background-size: cover;
+            display: none;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .eye:hover {
+            background-image: url('https://media.giphy.com/media/3o7TKA5hqkOqGHQNHi/giphy.gif');
+            transform: scale(1.1);
+        }
+        
+        .congratulations {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        h1 {
+            font-size: 3em;
+            color: #ff00ff;
+            text-shadow: 0 0 10px #ffffff;
+            margin-bottom: 30px;
+        }
+        
+        .confetti {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+            z-index: -1;
+        }
+        
+        .final-password {
+            font-size: 2em;
+            background-color: rgba(255, 255, 255, 0.2);
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 30px;
+        }
+    </style>
+</head>
+<body>
+    <audio id="suspenseMusic" loop>
+        <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
+    </audio>
+    
+    <audio id="celebrationMusic">
+        <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3" type="audio/mpeg">
+    </audio>
+    
+    <div id="textContainer">
+        <p class="typing-text" id="typingText"></p>
+    </div>
+    
+    <div class="eye" id="eye"></div>
+    
+    <div class="congratulations" id="congratulations">
+        <h1>PARABÉNS!</h1>
+        <div class="confetti" id="confetti"></div>
+        <p class="final-password">Sua senha final é: <strong>MESTREDOSENIGMAS</strong></p>
+        <img src="https://media.giphy.com/media/3o7aD2X9H8bmnLNL4c/giphy.gif" width="200">
+        <img src="https://media.giphy.com/media/3o7TKsQ8UQk5JJxPyQ/giphy.gif" width="200">
+    </div>
+    
+    <script>
+        const text = "você conseguiu meu bem... que homem inteligente... mas será que é realmente o final?";
+        const typingText = document.getElementById('typingText');
+        const eye = document.getElementById('eye');
+        const textContainer = document.getElementById('textContainer');
+        const congratulations = document.getElementById('congratulations');
+        const suspenseMusic = document.getElementById('suspenseMusic');
+        const celebrationMusic = document.getElementById('celebrationMusic');
+        
+        // Inicia a música de suspense
+        suspenseMusic.volume = 0.3;
+        suspenseMusic.play();
+        
+        // Efeito de digitação
+        function typeWriter(text, i, fnCallback) {
+            if (i < text.length) {
+                typingText.innerHTML = text.substring(0, i + 1);
+                setTimeout(function() { typeWriter(text, i + 1, fnCallback) }, 50);
+            } else if (typeof fnCallback == 'function') {
+                setTimeout(fnCallback, 2000);
+            }
+        }
+        
+        // Inicia a animação de digitação
+        typeWriter(text, 0, function() {
+            // Texto terminou de digitar - fade out
+            textContainer.style.transition = 'opacity 1s';
+            textContainer.style.opacity = '0';
+            
+            setTimeout(function() {
+                textContainer.style.display = 'none';
+                // Mostra o olho com fade in
+                eye.style.display = 'block';
+                eye.style.opacity = '0';
+                setTimeout(function() {
+                    eye.style.transition = 'opacity 1s';
+                    eye.style.opacity = '1';
+                }, 100);
+            }, 1000);
+        });
+        
+        // Quando o olho é clicado
+        eye.addEventListener('click', function() {
+            suspenseMusic.pause();
+            celebrationMusic.play();
+            
+            // Fade out do olho
+            eye.style.transition = 'opacity 0.5s';
+            eye.style.opacity = '0';
+            
+            setTimeout(function() {
+                eye.style.display = 'none';
+                // Espera 2 segundos (site preto)
+                setTimeout(function() {
+                    // Mostra os parabéns
+                    congratulations.style.display = 'flex';
+                    
+                    // Adiciona confetes
+                    for (let i = 0; i < 50; i++) {
+                        const confetti = document.createElement('div');
+                        confetti.style.position = 'absolute';
+                        confetti.style.width = '10px';
+                        confetti.style.height = '10px';
+                        confetti.style.backgroundColor = `hsl(${Math.random() * 360}, 100%, 50%)`;
+                        confetti.style.left = Math.random() * 100 + '%';
+                        confetti.style.top = '-10px';
+                        confetti.style.borderRadius = '50%';
+                        confetti.style.animation = `fall ${3 + Math.random() * 5}s linear infinite`;
+                        
+                        document.getElementById('confetti').appendChild(confetti);
+                    }
+                    
+                    // Adiciona animação CSS para os confetes
+                    const style = document.createElement('style');
+                    style.innerHTML = `
+                        @keyframes fall {
+                            to {
+                                transform: translateY(100vh) rotate(360deg);
+                                opacity: 0;
+                            }
+                        }
+                    `;
+                    document.head.appendChild(style);
+                }, 2000);
+            }, 500);
+        });
+    </script>
+</body>
+</html>
