@@ -11,36 +11,103 @@
             margin: 0;
             padding: 0;
             text-align: center;
-            color: white;
+            color: #333; /* Changed from white to dark for better readability */
+            background: linear-gradient(to bottom, #f5f5f5, #e0e0e0);
         }
         
         .hidden-text {
-            margin-top: 300px;
-            font-size: 2em;
+            margin-top: 150px; /* Reduced from 300px */
+            font-size: 1.3em; /* Slightly larger than before */
+            color: #5a2d82; /* Purple color to match your theme */
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+            padding: 30px;
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 15px;
+            display: inline-block;
+            max-width: 80%;
+            margin-left: auto;
+            margin-right: auto;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+            line-height: 1.6;
+        }
+
+        .charada {
+            margin: 20px 0;
+            padding: 15px;
+            background-color: rgba(218, 201, 223, 0.3);
+            border-radius: 10px;
+            text-align: left;
+            font-style: italic;
+        }
+
+        .charada-number {
+            font-weight: bold;
+            color: #5a2d82;
+        }
+
+        /* Secret message styling */
+        .secret-message {
+            position: absolute;
+            left: -9999px;
+            opacity: 0.01;
+            height: 1px;
+            overflow: hidden;
+            color: #5a2d82;
+            font-size: 0.8em;
+            font-style: italic;
         }
     </style>
 </head>
 <body>
-    <div class="hidden-text">texto texto texto</div>
+
+    <audio autoplay id="congratsSound">
+        <source src="assets/sounds/parabens.mp3" type="audio/mpeg">
+    </audio>
+
+    <div class="hidden-text">
+        <p>Parabéns! Parabéns! Olha só como é inteligentinho... que bonitinho.</p>
+        <p>Mas agora preciso que ache alguns números para mim.. Vou te dar 3 charadas, assim que completar reflita sobre! Com certeza vai achar a resposta para a próxima pagina.</p>
+        
+        <div class="charada">
+            <span class="charada-number">1-</span> Sou considerado o fracasso, por mais que, se colocado no lugar certo, posso dar muito valor.
+        </div>
+        
+        <div class="charada">
+            <span class="charada-number">2-</span> Sou considerado o inicio, o começo. Sou um numero que hoje é importante.
+        </div>
+        
+        <div class="charada">
+            <span class="charada-number">3-</span> Sou muito considerado importante para os religiosos, já que sou o que representa os estados de ser.
+        </div>
+        
+        <p style="margin-top: 30px;">Achou? confio em você! Não é complicado, mas preciso que transcenda o obvio e pense sobre, talvez não seja tão obvio... hehe</p>
+    </div>
     
     <script>
-        // Verifica se o usuário digitou a resposta correta na URL
+        document.addEventListener('DOMContentLoaded', function() {
+            const congratsSound = document.getElementById('congratsSound');
+            congratsSound.volume = 0.7;
+            congratsSound.play().catch(e => console.log("Autoplay bloqueado"));
+            
+            document.body.addEventListener('click', function() {
+                congratsSound.play();
+            });
+        });
+
+       
         function checkURL() {
             const path = window.location.pathname.split('/').pop();
             
             if (path === 'data') {
-                // Resposta correta - próxima fase
                 window.location.href = 'data';
             } else if (path === '013') {
-                // Resposta errada - redireciona
                 window.location.href = 'https://pt.org.br/';
+            } else if (path === '313') {  
+                window.location.href = 'parabens.html';  
             }
         }
         
-        // Verifica a URL quando a página carrega
         window.onload = checkURL;
-        
-        // Verifica a URL sempre que muda
         window.onpopstate = checkURL;
     </script>
 </body>
