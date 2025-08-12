@@ -17,8 +17,8 @@
         
         .post-it {
             position: absolute;
-            width: 150px;
-            height: 150px;
+            width: 200px;
+            height: 200px;
             padding: 10px;
             background-color: #fffb8f;
             box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
@@ -36,15 +36,17 @@
         
         .post-it img {
             max-width: 100%;
-            max-height: 80px;
+            max-height: 100px;
             display: block;
             margin: 5px auto;
+            object-fit: contain;
         }
         
         .post-it p {
             margin: 5px 0;
             font-size: 0.9em;
             text-align: center;
+            word-wrap: break-word;
         }
         
         .lyrics {
@@ -112,44 +114,60 @@
         }, { once: true });
 
         const lyrics = [
-            "Imagine all the people living life in peace",
-            "Don't stop believin', hold on to that feelin'",
-            "I see a little silhouetto of a man",
-            "Is this the real life? Is this just fantasy?",
-            "Here comes the sun, doo-doo-doo-doo",
-            "We will, we will rock you",
-            "Yesterday, all my troubles seemed so far away",
-            "I wanna hold your hand",
-            "Let it be, let it be",
-            "Hey Jude, don't make it bad",
-            "Bohemian Rhapsody lyrics here",
-            "Another one bites the dust",
-            "We are the champions, my friends",
-            "Money, get away",
-            "All you need is love",
-            "Lucy in the sky with diamonds",
-            "Hello, hello, I don't know why you say goodbye",
-            "Strawberry fields forever",
-            "Let me take you down 'cause I'm going to",
-            "Penny Lane is in my ears and in my eyes"
+            "Q",
+            "I know too well I'm Underneath yoUr spell So, darling, if yoU smell something bUrning, it's my heart",
+            "when i look at you i can't believe it's true. You're all i ever dreaMed of and you love Me",
+            "It's nothing nEw... I wait for you",
+            "I don't know what I'm sUpposed to do. HaUnted by the ghost of yoU. Oh, take me back to the night we met",
+            "And as the earth burns to the ground, oh, boy, it's you that I lie with, as the atoM boMb locks in.",
+            "Don't you give me up, pleAse don't give up on me, I belong with you, And only you, bAby",
+            "You look so pretty and I love this vIew",
+            "Meu bem, quero arrancar a triSteza de você, vamoS fugir aSSim que a gente Se ver",
+            "'CAuse I, I cAn feel A reAl connection, A supernAturAl AttrAction-Ah. I got the feels for you, yeAh, yeAh, yeAh, yeAh",
+            "Sei que uM dia eu vou Morrer, saiba que isso taMbéM vale pra você. Mas enquanto esse dia não veM, quero passar todos os outros ao seu lado",
+            "I will fall in lOve with you Over and Over again",
+            "E",
+            "Nossa, como eu amo passar tempo com ele... deveria passar mais.",
+            "Queria poder beija-lo, será que algum dia vou poder?",
+            "Hm, que saudades.",
+            "AIai meu gatinho, que falta de criatividade </3",
+            "Eu to perdendo a sanidade aos poucos, desculpa",
+            "Oi eu amo meu homem muito muito muito",
+            "To achando que nem palavras, melodias ou a combinação podem explicar meu sentimento por ti..."
         ];
         
+        // Imagens correspondentes às letras na mesma ordem
         const images = [
-            "https://media.giphy.com/media/3o7aTskHEUdgCQAXde/giphy.gif",
-            "https://media.giphy.com/media/3o7btPCcdNniyf0ArS/giphy.gif",
-            "https://media.giphy.com/media/3o7abAHdYvZdBNnGZq/giphy.gif",
-            "https://media.giphy.com/media/3o7TKsQ8UQk5JJxPyQ/giphy.gif",
-            "https://media.giphy.com/media/3o7TKwxYkeW0ZgTn1e/giphy.gif"
+            "assets/images/Q.png",
+            "assets/images/MasochismTango.png",
+            "assets/images/YouLoveMe.png",
+            "assets/images/IWaitForYou.png",
+            "assets/images/TheNightWeMet.png",
+            "assets/images/AsTheWorldCavesIn.png",
+            "assets/images/DarkRed.png",
+            "assets/images/WeFellInLoveInOctober.png",
+            "assets/images/ChaleEmAlaska.png",
+            "assets/images/TheFeels.png",
+            "assets/images/SerenataExistencialista.png",
+            "assets/images/WouldYouFallInLoveWithMeAgain.png",
+            "assets/images/E.png",
+            "", // Sem imagem para esta frase
+            "", // Sem imagem para esta frase
+            "", // Sem imagem para esta frase
+            "", // Sem imagem para esta frase
+            "", // Sem imagem para esta frase
+            "", // Sem imagem para esta frase
+            ""  // Sem imagem para esta frase
         ];
         
         function createPostIt() {
-            for (let i = 0; i < 20; i++) {
+            for (let i = 0; i < lyrics.length; i++) {
                 const postIt = document.createElement('div');
                 postIt.className = 'post-it';
                 
                 // Posição aleatória
-                const left = Math.random() * (window.innerWidth - 170);
-                const top = Math.random() * (window.innerHeight - 170);
+                const left = Math.random() * (window.innerWidth - 220);
+                const top = Math.random() * (window.innerHeight - 220);
                 postIt.style.left = left + 'px';
                 postIt.style.top = top + 'px';
                 
@@ -157,10 +175,11 @@
                 const rotation = -5 + Math.random() * 10;
                 postIt.style.transform = `rotate(${rotation}deg)`;
                 
-                // Conteúdo - 50% chance de ter imagem
-                if (Math.random() > 0.5) {
+                // Adiciona imagem correspondente se existir
+                if (images[i] && images[i] !== "") {
                     const img = document.createElement('img');
-                    img.src = images[Math.floor(Math.random() * images.length)];
+                    img.src = images[i];
+                    img.alt = "Imagem da música";
                     postIt.appendChild(img);
                 }
                 
