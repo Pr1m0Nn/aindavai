@@ -19,7 +19,7 @@
             min-height: 100vh;
         }
 
-        /* Faixa central branca */
+     
         .main-stripe {
             width: 90%;
             max-width: 900px;
@@ -29,9 +29,9 @@
             box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
         }
 
-        /* Container para dica com GIF */
+       
         .hint-container {
-            display: none; /* Começa escondido */
+            display: none;
             flex-direction: row;
             align-items: center;
             justify-content: space-between;
@@ -55,7 +55,7 @@
             flex-shrink: 0;
         }
 
-        /* Estilos dos outros elementos */
+       
         .cat-image {
             width: 300px;
             margin-top: 40px;
@@ -132,13 +132,7 @@
             transition: transform 0.3s ease;
         }
         
-        /* Efeito de hover na carteira */
-        .wallet-img {
-            content: url('https://cdn.discordapp.com/attachments/1269790229296971889/1404913122208125170/1238_Sem_Titulo_20250812164152.png');
-        }
-        
         .wallet-img:hover {
-            content: url('https://cdn.discordapp.com/attachments/1269790229296971889/1404913122208125170/1238_Sem_Titulo_20250812164152.png'); /* Substitua pelo link da imagem 2 */
             transform: scale(1.05);
         }
         
@@ -195,12 +189,12 @@
 </head>
 <body>
     <div class="main-stripe">
-        <!-- Áudio de fundo -->
+       
         <audio loop id="backgroundMusic">
-            <source src="audios/Ukiki Jammin' - Yoshi's New Island OST.mp3" type="audio/mpeg">
+            <source src="https://dl.dropboxusercontent.com/scl/fi/oaw3xmhw621ac74hnrj8d/Ukiki-Jammin-Yoshi-s-New-Island-OST.mp3" type="audio/mpeg">
         </audio>
         
-        <!-- Conteúdo principal -->
+        
         <img src="https://media.tenor.com/eRGU5l2v-_wAAAAj/cat-meme.gif" class="cat-image" alt="Gato acenando">
         
         <div class="welcome-container">
@@ -220,7 +214,7 @@
             <p class="error-message" id="errorMessage">Senha incorreta! Tente novamente.</p>
         </div>
         
-        <!-- Container de dica com GIF -->
+       
         <div class="hint-container" id="hintSection">
             <div class="hint-text">
                 <p>Vixi.... gato nao foi? putz.</p>
@@ -229,28 +223,33 @@
             <img src="https://media.tenor.com/fARxykRmn70AAAAj/confuso-confuse.gif" class="hint-gif" alt="GIF de confusão">
         </div>
         
-        <!-- Carteira -->
+       
         <div class="wallet-container" id="walletSection">
-            <img src="assets/images/carteira_fechada.png" class="wallet-img" alt="Carteira" id="walletImg">
+            <img src="assets/images/carteira_fechada.png" 
+                 data-hover="assets/images/carteira_aberta.png" 
+                 class="wallet-img" 
+                 alt="Carteira" 
+                 id="walletImg">
         </div>
     </div>
     
-    <!-- Overlay e imagem escondida -->
+   
     <div class="overlay" id="overlay"></div>
     <div class="hidden-img-container" id="hiddenImgContainer">
-        <img src="https://i.imgur.com/placeholder.png" class="hidden-img" id="hiddenImg">
+        <img src="assets/images/carta.png" class="hidden-img" id="hiddenImg">
         <div class="invisible-layer" id="invisibleLayer"></div>
     </div>
     
     <script>
-        // Espera a página carregar completamente
+        
         document.addEventListener('DOMContentLoaded', function() {
             let attempts = 0;
             
-            // Configuração da música
-            const backgroundMusic = document.getElementById('backgroundMusic');
             
-            // Toca a música após primeira interação
+            const backgroundMusic = document.getElementById('backgroundMusic');
+            backgroundMusic.volume = 0.2; 
+            
+            
             function playMusic() {
                 backgroundMusic.play().catch(e => console.log("Autoplay bloqueado"));
                 document.removeEventListener('click', playMusic);
@@ -258,7 +257,7 @@
             
             document.addEventListener('click', playMusic);
             
-            // Configuração da senha
+           
             function checkPassword() {
                 const password = document.getElementById('passwordInput').value;
                 const errorMessage = document.getElementById('errorMessage');
@@ -278,39 +277,36 @@
                 }
             }
             
-            // Configura botão e campo de senha
+        
             document.querySelector('button').addEventListener('click', checkPassword);
             
-            // Permite enviar com Enter
+          
             document.getElementById('passwordInput').addEventListener('keypress', function(e) {
                 if (e.key === 'Enter') {
                     checkPassword();
                 }
             });
             
-            // Configuração da carteira e imagem escondida
+            
             const walletImg = document.getElementById('walletImg');
             const hiddenImgContainer = document.getElementById('hiddenImgContainer');
             const overlay = document.getElementById('overlay');
             const invisibleLayer = document.getElementById('invisibleLayer');
             
-            // Pré-carrega a imagem de hover
-            const hoverImage = new Image();
-            hoverImage.src = 'assets/images/carteira_aberta.png'; // Substitua pelo link da imagem 2
-            
+          
             walletImg.addEventListener('mouseenter', function() {
-                this.src = hoverImage.src;
+                this.src = this.dataset.hover;
             });
             
             walletImg.addEventListener('mouseleave', function() {
-                this.src = '/assets/images/carteira_fechada.png';
+                this.src = 'assets/images/carteira_fechada.png';
             });
             
             walletImg.addEventListener('click', function() {
                 overlay.style.display = 'block';
                 hiddenImgContainer.style.display = 'block';
                 
-                // Ajusta a layer invisível para cobrir exatamente a imagem
+                
                 const hiddenImg = document.getElementById('hiddenImg');
                 invisibleLayer.style.width = hiddenImg.offsetWidth + 'px';
                 invisibleLayer.style.height = hiddenImg.offsetHeight + 'px';
