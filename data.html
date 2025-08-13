@@ -8,7 +8,11 @@
     <style>
         body {
             font-family: 'Gotham', sans-serif;
-            background-color: #BE8751;
+            background-image: url('assets/images/fundo.png');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            background-repeat: no-repeat;
             margin: 0;
             padding: 20px;
             overflow: hidden;
@@ -28,6 +32,7 @@
             pointer-events: none;
             width: 80%;
             max-width: 600px;
+            text-shadow: 1px 1px 3px rgba(255, 255, 255, 0.8);
         }
         
         .post-it {
@@ -97,16 +102,15 @@
             "E",
             "Nossa, como eu amo passar tempo com ele... deveria passar mais.",
             "Queria poder beija-lo, será que algum dia vou poder?",
-            "Hm, talvez eu devesse me organizar por datas.",
+            "Hm, que saudades.",
             "AIai meu gatinho, que falta de criatividade </3",
             "Eu to perdendo a sanidade aos poucos, desculpa",
             "Oi eu amo meu homem muito muito muito",
             "To achando que nem palavras, melodias ou a combinação podem explicar meu sentimento por ti..."
         ];
         
-        // Imagens correspondentes às letras na mesma ordem (sem Q.png e E.png)
         const images = [
-            "", // Q - sem imagem
+            "",
             "assets/images/MasochismTango.png",
             "assets/images/YouLoveMe.png",
             "assets/images/IWaitForYou.png",
@@ -118,28 +122,27 @@
             "assets/images/TheFeels.png",
             "assets/images/SerenataExistencialista.png",
             "assets/images/WouldYouFallInLoveWithMeAgain.png",
-            "", // E - sem imagem
-            "", // Sem imagem para esta frase
-            "", // Sem imagem para esta frase
-            "", // Sem imagem para esta frase
-            "", // Sem imagem para esta frase
-            "", // Sem imagem para esta frase
-            "", // Sem imagem para esta frase
-            ""  // Sem imagem para esta frase
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            ""
         ];
 
-        // Cores aleatórias para os post-its
         const colors = [
-            '#FFFB8F', // Amarelo post-it tradicional
-            '#FF9E9E', // Rosa claro
-            '#B5EAD7', // Verde menta
-            '#C7CEEA', // Azul claro
-            '#E2F0CB', // Verde claro
-            '#FFDAC1', // Pêssego
-            '#F8B195', // Coral
-            '#F67280', // Rosa
-            '#C06C84', // Lilás
-            '#6C5B7B'  // Roxo
+            '#FFFB8F',
+            '#FF9E9E',
+            '#B5EAD7',
+            '#C7CEEA',
+            '#E2F0CB',
+            '#FFDAC1',
+            '#F8B195',
+            '#F67280',
+            '#C06C84',
+            '#6C5B7B'
         ];
         
         function createPostIt() {
@@ -148,24 +151,21 @@
             const centerY = window.innerHeight / 2;
             const minRadius = 250;
             const maxRadius = Math.min(window.innerWidth, window.innerHeight) * 0.45;
-            const spacing = 220; // Distância mínima entre post-its
+            const spacing = 220;
             
             for (let i = 0; i < lyrics.length; i++) {
                 let attempts = 0;
                 let validPosition = false;
                 let left, top;
                 
-                // Tenta encontrar uma posição que não sobreponha outros post-its
                 while (!validPosition && attempts < 100) {
                     attempts++;
                     
-                    // Posição em círculo ao redor do texto central
                     const angle = Math.random() * Math.PI * 2;
                     const radius = minRadius + Math.random() * (maxRadius - minRadius);
-                    left = centerX + Math.cos(angle) * radius - 100; // 100 = metade da largura
-                    top = centerY + Math.sin(angle) * radius - 100; // 100 = metade da altura
+                    left = centerX + Math.cos(angle) * radius - 100;
+                    top = centerY + Math.sin(angle) * radius - 100;
                     
-                    // Verifica colisão com outros post-its
                     validPosition = true;
                     for (const other of postIts) {
                         const dx = left - other.left;
@@ -180,7 +180,6 @@
                 }
                 
                 if (!validPosition) {
-                    // Se não encontrar posição ideal após muitas tentativas, coloca aleatoriamente
                     left = Math.random() * (window.innerWidth - 200);
                     top = Math.random() * (window.innerHeight - 200);
                 }
@@ -188,23 +187,18 @@
                 const postIt = document.createElement('div');
                 postIt.className = 'post-it';
                 
-                // Cor aleatória
                 const randomColor = colors[Math.floor(Math.random() * colors.length)];
                 postIt.style.backgroundColor = randomColor;
                 
-                // Cor do texto baseada no brilho do fundo
                 const brightness = getBrightness(randomColor);
                 postIt.style.color = brightness > 180 ? '#333' : '#fff';
                 
-                // Rotação aleatória
                 const rotation = -10 + Math.random() * 20;
                 postIt.style.transform = `rotate(${rotation}deg)`;
                 
-                // Posiciona o post-it
                 postIt.style.left = `${left}px`;
                 postIt.style.top = `${top}px`;
                 
-                // Adiciona imagem correspondente se existir
                 if (images[i] && images[i] !== "") {
                     const img = document.createElement('img');
                     img.src = images[i];
@@ -217,7 +211,6 @@
                 lyric.textContent = lyrics[i];
                 postIt.appendChild(lyric);
                 
-                // Tornar arrastável
                 makeDraggable(postIt);
                 
                 document.body.appendChild(postIt);
@@ -225,7 +218,6 @@
             }
         }
         
-        // Função para calcular brilho da cor
         function getBrightness(hexColor) {
             const r = parseInt(hexColor.substr(1, 2), 16);
             const g = parseInt(hexColor.substr(3, 2), 16);
@@ -242,12 +234,11 @@
             
             function dragMouseDown(e) {
                 if (e.target.tagName === 'IMG') {
-                    return; // Não inicia arrasto se clicar em uma imagem
+                    return;
                 }
                 
                 e = e || window.event;
                 e.preventDefault();
-                // get the mouse cursor position at startup:
                 pos3 = e.clientX;
                 pos4 = e.clientY;
                 startX = e.clientX;
@@ -255,35 +246,30 @@
                 document.onmouseup = closeDragElement;
                 document.onmousemove = elementDrag;
                 isDragging = false;
-                element.style.zIndex = 100; // Traz para frente ao arrastar
+                element.style.zIndex = 100;
             }
             
             function elementDrag(e) {
                 e = e || window.event;
                 e.preventDefault();
                 
-                // Verifica se o movimento é suficiente para considerar como arrasto
                 if (!isDragging && (Math.abs(e.clientX - startX) > 5 || Math.abs(e.clientY - startY) > 5)) {
                     isDragging = true;
                 }
                 
-                // calculate the new cursor position:
                 pos1 = pos3 - e.clientX;
                 pos2 = pos4 - e.clientY;
                 pos3 = e.clientX;
                 pos4 = e.clientY;
-                // set the element's new position:
                 element.style.top = (element.offsetTop - pos2) + "px";
                 element.style.left = (element.offsetLeft - pos1) + "px";
             }
             
             function closeDragElement() {
-                // stop moving when mouse button is released:
                 document.onmouseup = null;
                 document.onmousemove = null;
                 
                 if (isDragging) {
-                    // Se estava arrastando, previne o clique
                     element.style.pointerEvents = 'none';
                     setTimeout(() => {
                         element.style.pointerEvents = 'auto';
@@ -291,17 +277,15 @@
                 }
                 
                 setTimeout(() => {
-                    element.style.zIndex = ''; // Restaura z-index após arrastar
+                    element.style.zIndex = '';
                 }, 300);
             }
         }
         
-        // Verifica se o usuário digitou a resposta correta na URL
         function checkURL() {
             const path = window.location.pathname.split('/').pop();
             
             if (path === 'Tobi' || path === 'tobi') {
-                // Resposta correta - próxima fase
                 window.location.href = 'Tobi';
             }
         }
@@ -312,7 +296,6 @@
         };
         
         window.onresize = function() {
-            // Reorganiza os post-its ao redimensionar a janela
             const postItElements = document.querySelectorAll('.post-it');
             if (postItElements.length > 0) {
                 document.querySelectorAll('.post-it').forEach(el => el.remove());
