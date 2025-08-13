@@ -3,313 +3,193 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quadro de Avisos</title>
-    <link href="https://fonts.googleapis.com/css2?family=Gotham:wght@400;700&display=swap" rel="stylesheet">
+    <title>Final</title>
     <style>
         body {
-            font-family: 'Gotham', sans-serif;
-            background-image: url('assets/images/fundo.png');
-            background-size: cover;
-            background-position: center;
-            background-attachment: fixed;
-            background-repeat: no-repeat;
+            font-family: 'Courier New', monospace;
+            background-color: black;
+            color: white;
             margin: 0;
-            padding: 20px;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
             overflow: hidden;
-            min-height: 100vh;
-        }
-        
-        .central-text {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            font-size: 3em;
-            font-weight: 900;
-            color: black;
             text-align: center;
-            z-index: 1; /* Agora está ATRÁS dos post-its */
-            pointer-events: none;
-            width: 80%;
-            max-width: 800px;
-            text-shadow: 
-                2px 2px 4px rgba(255, 255, 255, 0.8),
-                -2px -2px 4px rgba(255, 255, 255, 0.8),
-                2px -2px 4px rgba(255, 255, 255, 0.8),
-                -2px 2px 4px rgba(255, 255, 255, 0.8);
-            padding: 20px;
         }
         
-        .post-it {
-            position: absolute;
+        .typing-text {
+            font-size: 1.5em;
+            border-right: 0.15em solid white;
+            white-space: nowrap;
+            overflow: hidden;
+            margin: 0 auto;
+            letter-spacing: 0.15em;
+            animation: blink-caret 0.75s step-end infinite;
+        }
+        
+        @keyframes blink-caret {
+            from, to { border-color: transparent }
+            50% { border-color: white; }
+        }
+        
+        .eye {
             width: 200px;
             height: 200px;
-            padding: 15px;
-            box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.2);
-            cursor: move;
-            user-select: none;
-            overflow: hidden;
-            transition: transform 0.3s;
-            display: flex;
+            background-image: url('https://media.giphy.com/media/3o7TKA5hqkOqGHQNHi/giphy.gif');
+            background-size: cover;
+            display: none;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .eye:hover {
+            background-image: url('https://media.giphy.com/media/3o7TKA5hqkOqGHQNHi/giphy.gif');
+            transform: scale(1.1);
+        }
+        
+        .congratulations {
+            display: none;
             flex-direction: column;
-            justify-content: space-between;
-            z-index: 100; /* Post-its na frente do texto */
-        }
-        
-        .post-it:hover {
-            transform: scale(1.1) rotate(0deg);
-            z-index: 200; /* Post-it em hover fica acima dos demais */
-            box-shadow: 8px 8px 20px rgba(0,0,0,0.3);
-        }
-        
-        .post-it img {
-            max-width: 100%;
-            max-height: 100px;
-            display: block;
-            margin: 0 auto 10px;
-            object-fit: contain;
-        }
-        
-        .post-it p {
-            margin: 0;
-            font-size: 1em;
-            text-align: center;
-            word-wrap: break-word;
-            flex-grow: 1;
-            display: flex;
             align-items: center;
-            justify-content: center;
-            font-family: 'Gotham', sans-serif;
         }
         
-        .lyrics {
-            font-style: italic;
+        h1 {
+            font-size: 3em;
+            color: #ff00ff;
+            text-shadow: 0 0 10px #ffffff;
+            margin-bottom: 30px;
+        }
+        
+        .confetti {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+            z-index: -1;
+        }
+        
+        .final-password {
+            font-size: 2em;
+            background-color: rgba(255, 255, 255, 0.2);
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 30px;
         }
     </style>
 </head>
 <body>
-    <!-- Texto central fixo - agora ATRÁS dos post-its -->
-    <div class="central-text">Que bagunça! Tenho que me organizar mais... mas como?</div>
-
+    <audio id="suspenseMusic" loop>
+        <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
+    </audio>
+    
+    <audio id="celebrationMusic">
+        <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3" type="audio/mpeg">
+    </audio>
+    
+    <div id="textContainer">
+        <p class="typing-text" id="typingText"></p>
+    </div>
+    
+    <div class="eye" id="eye"></div>
+    
+    <div class="congratulations" id="congratulations">
+        <h1>PARABÉNS!</h1>
+        <div class="confetti" id="confetti"></div>
+        <p class="final-password">Sua senha final é: <strong>MESTREDOSENIGMAS</strong></p>
+        <img src="https://media.giphy.com/media/3o7aD2X9H8bmnLNL4c/giphy.gif" width="200">
+        <img src="https://media.giphy.com/media/3o7TKsQ8UQk5JJxPyQ/giphy.gif" width="200">
+    </div>
+    
     <script>
-        const lyrics = [
-            "Q",
-            "I know too well I'm Underneath yoUr spell So, darling, if yoU smell something bUrning, it's my heart",
-            "when i look at you i can't believe it's true. You're all i ever dreaMed of and you love Me",
-            "It's nothing nEw... I wait for you",
-            "I don't know what I'm sUpposed to do. HaUnted by the ghost of yoU. Oh, take me back to the night we met",
-            "And as the earth burns to the ground, oh, boy, it's you that I lie with, as the atoM boMb locks in.",
-            "Don't you give me up, pleAse don't give up on me, I belong with you, And only you, bAby",
-            "You look so pretty and I love this vIew",
-            "Meu bem, quero arrancar a triSteza de você, vamoS fugir aSSim que a gente Se ver",
-            "'CAuse I, I cAn feel A reAl connection, A supernAturAl AttrAction-Ah. I got the feels for you, yeAh, yeAh, yeAh, yeAh",
-            "Sei que uM dia eu vou Morrer, saiba que isso taMbéM vale pra você. Mas enquanto esse dia não veM, quero passar todos os outros ao seu lado",
-            "I will fall in lOve with you Over and Over again",
-            "E",
-            "Nossa, como eu amo passar tempo com ele... deveria passar mais.",
-            "Queria poder beija-lo, será que algum dia vou poder?",
-            "Hm, que saudades.",
-            "AIai meu gatinho, que falta de criatividade </3",
-            "Eu to perdendo a sanidade aos poucos, desculpa",
-            "Oi eu amo meu homem muito muito muito",
-            "To achando que nem palavras, melodias ou a combinação podem explicar meu sentimento por ti..."
-        ];
+        const text = "você conseguiu meu bem... que bom te ver aqui... mas será que é realmente o final?";
+        const typingText = document.getElementById('typingText');
+        const eye = document.getElementById('eye');
+        const textContainer = document.getElementById('textContainer');
+        const congratulations = document.getElementById('congratulations');
+        const suspenseMusic = document.getElementById('suspenseMusic');
+        const celebrationMusic = document.getElementById('celebrationMusic');
         
-        const images = [
-            "",
-            "assets/images/MasochismTango.png",
-            "assets/images/YouLoveMe.png",
-            "assets/images/IWaitForYou.png",
-            "assets/images/TheNightWeMet.png",
-            "assets/images/AsTheWorldCavesIn.png",
-            "assets/images/DarkRed.png",
-            "assets/images/WeFellInLoveInOctober.png",
-            "assets/images/ChaleEmAlaska.png",
-            "assets/images/TheFeels.png",
-            "assets/images/SerenataExistencialista.png",
-            "assets/images/WouldYouFallInLoveWithMeAgain.png",
-            "",
-            "",
-            "",
-            "",
-            "",
-            "",
-            "",
-            ""
-        ];
-
-        const colors = [
-            '#FFFB8F',
-            '#FF9E9E',
-            '#B5EAD7',
-            '#C7CEEA',
-            '#E2F0CB',
-            '#FFDAC1',
-            '#F8B195',
-            '#F67280',
-            '#C06C84',
-            '#6C5B7B'
-        ];
+        // Inicia a música de suspense
+        suspenseMusic.volume = 0.3;
+        suspenseMusic.play();
         
-        function createPostIt() {
-            const postIts = [];
-            const centerX = window.innerWidth / 2;
-            const centerY = window.innerHeight / 2;
-            const minRadius = 250;
-            const maxRadius = Math.min(window.innerWidth, window.innerHeight) * 0.45;
-            const spacing = 220;
+        // Efeito de digitação
+        function typeWriter(text, i, fnCallback) {
+            if (i < text.length) {
+                typingText.innerHTML = text.substring(0, i + 1);
+                setTimeout(function() { typeWriter(text, i + 1, fnCallback) }, 50);
+            } else if (typeof fnCallback == 'function') {
+                setTimeout(fnCallback, 2000);
+            }
+        }
+        
+        // Inicia a animação de digitação
+        typeWriter(text, 0, function() {
+            // Texto terminou de digitar - fade out
+            textContainer.style.transition = 'opacity 1s';
+            textContainer.style.opacity = '0';
             
-            for (let i = 0; i < lyrics.length; i++) {
-                let attempts = 0;
-                let validPosition = false;
-                let left, top;
-                
-                while (!validPosition && attempts < 100) {
-                    attempts++;
+            setTimeout(function() {
+                textContainer.style.display = 'none';
+                // Mostra o olho com fade in
+                eye.style.display = 'block';
+                eye.style.opacity = '0';
+                setTimeout(function() {
+                    eye.style.transition = 'opacity 1s';
+                    eye.style.opacity = '1';
+                }, 100);
+            }, 1000);
+        });
+        
+        // Quando o olho é clicado
+        eye.addEventListener('click', function() {
+            suspenseMusic.pause();
+            celebrationMusic.play();
+            
+            // Fade out do olho
+            eye.style.transition = 'opacity 0.5s';
+            eye.style.opacity = '0';
+            
+            setTimeout(function() {
+                eye.style.display = 'none';
+                // Espera 2 segundos (site preto)
+                setTimeout(function() {
+                    // Mostra os parabéns
+                    congratulations.style.display = 'flex';
                     
-                    const angle = Math.random() * Math.PI * 2;
-                    const radius = minRadius + Math.random() * (maxRadius - minRadius);
-                    left = centerX + Math.cos(angle) * radius - 100;
-                    top = centerY + Math.sin(angle) * radius - 100;
-                    
-                    validPosition = true;
-                    for (const other of postIts) {
-                        const dx = left - other.left;
-                        const dy = top - other.top;
-                        const distance = Math.sqrt(dx * dx + dy * dy);
+                    // Adiciona confetes
+                    for (let i = 0; i < 50; i++) {
+                        const confetti = document.createElement('div');
+                        confetti.style.position = 'absolute';
+                        confetti.style.width = '10px';
+                        confetti.style.height = '10px';
+                        confetti.style.backgroundColor = `hsl(${Math.random() * 360}, 100%, 50%)`;
+                        confetti.style.left = Math.random() * 100 + '%';
+                        confetti.style.top = '-10px';
+                        confetti.style.borderRadius = '50%';
+                        confetti.style.animation = `fall ${3 + Math.random() * 5}s linear infinite`;
                         
-                        if (distance < spacing) {
-                            validPosition = false;
-                            break;
-                        }
+                        document.getElementById('confetti').appendChild(confetti);
                     }
-                }
-                
-                if (!validPosition) {
-                    left = Math.random() * (window.innerWidth - 200);
-                    top = Math.random() * (window.innerHeight - 200);
-                }
-                
-                const postIt = document.createElement('div');
-                postIt.className = 'post-it';
-                
-                const randomColor = colors[Math.floor(Math.random() * colors.length)];
-                postIt.style.backgroundColor = randomColor;
-                
-                const brightness = getBrightness(randomColor);
-                postIt.style.color = brightness > 180 ? '#333' : '#fff';
-                
-                const rotation = -10 + Math.random() * 20;
-                postIt.style.transform = `rotate(${rotation}deg)`;
-                
-                postIt.style.left = `${left}px`;
-                postIt.style.top = `${top}px`;
-                
-                if (images[i] && images[i] !== "") {
-                    const img = document.createElement('img');
-                    img.src = images[i];
-                    img.alt = "Imagem da música";
-                    postIt.appendChild(img);
-                }
-                
-                const lyric = document.createElement('p');
-                lyric.className = 'lyrics';
-                lyric.textContent = lyrics[i];
-                postIt.appendChild(lyric);
-                
-                makeDraggable(postIt);
-                
-                document.body.appendChild(postIt);
-                postIts.push({ left, top });
-            }
-        }
-        
-        function getBrightness(hexColor) {
-            const r = parseInt(hexColor.substr(1, 2), 16);
-            const g = parseInt(hexColor.substr(3, 2), 16);
-            const b = parseInt(hexColor.substr(5, 2), 16);
-            return (r * 299 + g * 587 + b * 114) / 1000;
-        }
-        
-        function makeDraggable(element) {
-            let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
-            let isDragging = false;
-            let startX, startY;
-            
-            element.onmousedown = dragMouseDown;
-            
-            function dragMouseDown(e) {
-                if (e.target.tagName === 'IMG') {
-                    return;
-                }
-                
-                e = e || window.event;
-                e.preventDefault();
-                pos3 = e.clientX;
-                pos4 = e.clientY;
-                startX = e.clientX;
-                startY = e.clientY;
-                document.onmouseup = closeDragElement;
-                document.onmousemove = elementDrag;
-                isDragging = false;
-                element.style.zIndex = 300; /* Post-it sendo arrastado fica acima de tudo */
-            }
-            
-            function elementDrag(e) {
-                e = e || window.event;
-                e.preventDefault();
-                
-                if (!isDragging && (Math.abs(e.clientX - startX) > 5 || Math.abs(e.clientY - startY) > 5)) {
-                    isDragging = true;
-                }
-                
-                pos1 = pos3 - e.clientX;
-                pos2 = pos4 - e.clientY;
-                pos3 = e.clientX;
-                pos4 = e.clientY;
-                element.style.top = (element.offsetTop - pos2) + "px";
-                element.style.left = (element.offsetLeft - pos1) + "px";
-            }
-            
-            function closeDragElement() {
-                document.onmouseup = null;
-                document.onmousemove = null;
-                
-                if (isDragging) {
-                    element.style.pointerEvents = 'none';
-                    setTimeout(() => {
-                        element.style.pointerEvents = 'auto';
-                    }, 100);
-                }
-                
-                setTimeout(() => {
-                    element.style.zIndex = '100'; /* Volta para z-index normal após arrastar */
-                }, 300);
-            }
-        }
-        
-        function checkURL() {
-            const path = window.location.pathname.split('/').pop();
-            
-            if (path === 'Tobi' || path === 'tobi') {
-                window.location.href = 'Tobi';
-            }
-        }
-        
-        window.onload = function() {
-            createPostIt();
-            checkURL();
-        };
-        
-        window.onresize = function() {
-            const postItElements = document.querySelectorAll('.post-it');
-            if (postItElements.length > 0) {
-                document.querySelectorAll('.post-it').forEach(el => el.remove());
-                createPostIt();
-            }
-        };
-        
-        window.onpopstate = checkURL;
+                    
+                    // Adiciona animação CSS para os confetes
+                    const style = document.createElement('style');
+                    style.innerHTML = `
+                        @keyframes fall {
+                            to {
+                                transform: translateY(100vh) rotate(360deg);
+                                opacity: 0;
+                            }
+                        }
+                    `;
+                    document.head.appendChild(style);
+                }, 2000);
+            }, 500);
+        });
     </script>
 </body>
 </html>
